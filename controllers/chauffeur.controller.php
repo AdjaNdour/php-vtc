@@ -29,7 +29,7 @@ $controllerChauffeur = function(): void {
                 $terminerCourse($idChauffeur);
                 break;
             case 4:
-                $consulterGainsJournaliers($idChauffeur);
+                // $consulterGainsJournaliers($idChauffeur);
                 break;
             case 0:
                 $continuer = false;
@@ -163,20 +163,17 @@ $terminerCourse = function(int $idChauffeur): void {
     echo "Notification de facturation envoyee au passager.\n";
 };
 
-$consulterGainsJournaliers = function(int $idChauffeur): void {
-    global $courses;
+// $consulterGainsJournaliers = function(int $idChauffeur): void {
+//     global $courses;
     
-    $totalGains = 0;
-    $count = 0;
+//     $totalGains = 0;
+//     $count = 0;
     
-    foreach ($courses as $id => $course) {
-        if ($course['idChauffeur'] === $idChauffeur && $course['statut'] === 'Payee') {
-            $totalGains += $course['montantDefinitif'] ?? $course['prixEstime'];
-            $count++;
-        }
-    }
-    
-    echo "\n=== GAINS DE LA JOURNEE ===\n";
-    echo "Nombre de courses terminees et payees : {$count}\n";
-    echo "Total des gains : {$totalGains} FCFA\n";
-};
+//     foreach ($courses as $id => $course) {
+//         if ($course['idChauffeur'] === $idChauffeur && $course['statut'] === 'Payee') {
+//             $totalGains += $course['montantDefinitif'] ?? $course['prixEstime'];
+//             $count++;
+//         }
+//     }
+//     echo "Total des gains : {$totalGains} FCFA\n";
+// };

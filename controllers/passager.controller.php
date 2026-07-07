@@ -6,6 +6,55 @@ require_once __DIR__ . '/../views/passager.view.php';
 require_once __DIR__ . '/../views/paiement.view.php';
 require_once __DIR__ . '/../controllers/paiement.controller.php';
 
+
+$controllerPassager = function(): void {
+    global $selectModel, $passagers, $menuPassager, $commanderCourse, $consulterHistorique, $payerCourse, $choisirModePaiement, $courses, $saisie;
+
+    $idPassager = $selectModel($passagers, "Sélectionnez un passager");
+    if ($idPassager === null) {
+        return;
+    }
+
+    $continuer = true;
+    while ($continuer) {
+        $choix = $menuPassager();
+        switch ($choix) {
+            case 1:
+                $commanderCourse($idPassager);
+                break;
+            case 2:
+                $consulterHistorique($idPassager);
+                break;
+            case 3:
+                $coursesTerminees = [];
+                foreach ($courses as $id => $course) {
+                    if ($course['idPassager'] === $idPassager && $course['statut'] === 'Terminee') {
+                        $coursesTerminees[$id] = $course;
+                    }
+                }
+                if (empty($coursesTerminees)) {
+                    echo "Aucune course terminee en attente de paiement.\n";
+                    break;
+                }
+                echo "\n=== COURSES EN ATTENTE DE PAIEMENT ===\n";
+                foreach ($coursesTerminees as $id => $course) {
+                    echo "[ID Course: {$id}] De: {$course['depart']} | A: {$course['destination']} | Montant: {$course['prixEstime']} FCFA\n";
+                }
+                $idCourse = $saisie("Saisissez l'ID de la course a payer");
+                if (!is_numeric($idCourse) || !isset($coursesTerminees[(int) $idCourse])) {
+                    echo "Selection invalide.\n";
+                    break;
+                }
+                $mode = $choisirModePaiement();
+                $payerCourse((int) $idCourse, $mode);
+                break;
+            case 0:
+                $continuer = false;
+                break;
+        }
+    }
+};
+
 $commanderCourse = function(int $idPassager): void {
     global $saisie, $estimerPrix, $ajouterCourse, $envoyerNotification, $courses;
 
@@ -81,51 +130,4 @@ $consulterHistorique = function(int $idPassager): void {
     }
 };
 
-$controllerPassager = function(): void {
-    global $selectModel, $passagers, $menuPassager, $commanderCourse, $consulterHistorique, $payerCourse, $choisirModePaiement, $courses, $saisie;
-
-    $idPassager = $selectModel($passagers, "Sélectionnez un passager");
-    if ($idPassager === null) {
-        return;
-    }
-
-    $continuer = true;
-    while ($continuer) {
-        $choix = $menuPassager();
-        switch ($choix) {
-            case 1:
-                $commanderCourse($idPassager);
-                break;
-            case 2:
-                $consulterHistorique($idPassager);
-                break;
-            case 3:
-                $coursesTerminees = [];
-                foreach ($courses as $id => $course) {
-                    if ($course['idPassager'] === $idPassager && $course['statut'] === 'Terminee') {
-                        $coursesTerminees[$id] = $course;
-                    }
-                }
-                if (empty($coursesTerminees)) {
-                    echo "Aucune course terminee en attente de paiement.\n";
-                    break;
-                }
-                echo "\n=== COURSES EN ATTENTE DE PAIEMENT ===\n";
-                foreach ($coursesTerminees as $id => $course) {
-                    echo "[ID Course: {$id}] De: {$course['depart']} | A: {$course['destination']} | Montant: {$course['prixEstime']} FCFA\n";
-                }
-                $idCourse = $saisie("Saisissez l'ID de la course a payer");
-                if (!is_numeric($idCourse) || !isset($coursesTerminees[(int) $idCourse])) {
-                    echo "Selection invalide.\n";
-                    break;
-                }
-                $mode = $choisirModePaiement();
-                $payerCourse((int) $idCourse, $mode);
-                break;
-            case 0:
-                $continuer = false;
-                break;
-        }
-    }
-};
 
