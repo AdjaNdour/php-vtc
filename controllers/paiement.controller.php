@@ -76,3 +76,4 @@ $genererRecu = function(int $idCourse): void {
     echo "Statut : " . $paiement['statut'] . "\n";
     echo "=========================================\n\n";
 };
+

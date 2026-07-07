@@ -5,6 +5,39 @@ require_once __DIR__ . '/../controllers/course.controller.php';
 require_once __DIR__ . '/../utils/view.php';
 require_once __DIR__ . '/../views/chauffeur.view.php';
 
+
+
+$controllerChauffeur = function(): void {
+    global $selectModel, $chauffeurs, $menuChauffeur, $accepterCourse, $demarrerCourse, $terminerCourse, $consulterGainsJournaliers;
+
+    $idChauffeur = $selectModel($chauffeurs, "Sélectionnez un chauffeur");
+    if ($idChauffeur === null) {
+        return;
+    }
+
+    $continuer = true;
+    while ($continuer) {
+        $choix = $menuChauffeur();
+        switch ($choix) {
+            case 1:
+                $accepterCourse($idChauffeur);
+                break;
+            case 2:
+                $demarrerCourse($idChauffeur);
+                break;
+            case 3:
+                $terminerCourse($idChauffeur);
+                break;
+            case 4:
+                $consulterGainsJournaliers($idChauffeur);
+                break;
+            case 0:
+                $continuer = false;
+                break;
+        }
+    }
+};
+
 $accepterCourse = function(int $idChauffeur): void {
     global $courses, $chauffeurs, $vehicules, $saisie, $changerStatutCourse, $envoyerNotification;
 
@@ -146,35 +179,4 @@ $consulterGainsJournaliers = function(int $idChauffeur): void {
     echo "\n=== GAINS DE LA JOURNEE ===\n";
     echo "Nombre de courses terminees et payees : {$count}\n";
     echo "Total des gains : {$totalGains} FCFA\n";
-};
-
-$controllerChauffeur = function(): void {
-    global $selectModel, $chauffeurs, $menuChauffeur, $accepterCourse, $demarrerCourse, $terminerCourse, $consulterGainsJournaliers;
-
-    $idChauffeur = $selectModel($chauffeurs, "Sélectionnez un chauffeur");
-    if ($idChauffeur === null) {
-        return;
-    }
-
-    $continuer = true;
-    while ($continuer) {
-        $choix = $menuChauffeur();
-        switch ($choix) {
-            case 1:
-                $accepterCourse($idChauffeur);
-                break;
-            case 2:
-                $demarrerCourse($idChauffeur);
-                break;
-            case 3:
-                $terminerCourse($idChauffeur);
-                break;
-            case 4:
-                $consulterGainsJournaliers($idChauffeur);
-                break;
-            case 0:
-                $continuer = false;
-                break;
-        }
-    }
 };

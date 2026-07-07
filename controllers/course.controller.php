@@ -61,3 +61,4 @@ $consulterNotifications = function(): void {
         }
     }
 };
+
