@@ -3,10 +3,6 @@
 require_once __DIR__ . '/controllers/passager.controller.php';
 require_once __DIR__ . '/controllers/chauffeur.controller.php';
 require_once __DIR__ . '/controllers/course.controller.php';
-require_once __DIR__ . '/controllers/paiement.controller.php';
-require_once __DIR__ . '/controllers/evaluation.controller.php';
-require_once __DIR__ . '/utils/view.php';
-require_once __DIR__ . '/views/course.view.php';
 
 $continuer = true;
 
@@ -33,28 +29,12 @@ while ($continuer) {
             $controllerChauffeur();
             break;
         case '3':
-            global $courses, $passagers, $chauffeurs, $afficherDetailCourse;
-            if (empty($courses)) {
-                echo "Aucune course enregistree.\n";
-            } else {
-                echo "\n=== TOUTES LES COURSES ===\n";
-                foreach ($courses as $id => $course) {
-                    $passager = $passagers[$course['idPassager']] ?? null;
-                    $chauffeur = $course['idChauffeur'] ? ($chauffeurs[$course['idChauffeur']] ?? null) : null;
-                    $afficherDetailCourse($course, $passager, $chauffeur);
-                }
-            }
+            global $controllerCourse;
+            $controllerCourse();
             break;
         case '4':
-            global $notifications;
-            if (empty($notifications)) {
-                echo "Aucune notification.\n";
-            } else {
-                echo "\n=== TOUTES LES NOTIFICATIONS ===\n";
-                foreach ($notifications as $id => $notif) {
-                    echo "[Notification ID: {$id}] Course ID: {$notif['idCourse']} - Message: \"{$notif['message']}\"\n";
-                }
-            }
+            global $consulterNotifications;
+            $consulterNotifications();
             break;
         case '0':
             $continuer = false;
